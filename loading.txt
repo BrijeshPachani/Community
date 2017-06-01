@@ -1,0 +1,100 @@
+
+
+<script type="text/javascript">
+$(window).load(function() {
+	$(".loader").fadeOut("slow");
+})
+
+
+
+$(document).ready(function () {
+    function disableBack() { window.history.forward() }
+
+    window.onload = disableBack();
+    window.onpageshow = function (evt) { if (evt.persisted) disableBack() }
+});
+
+
+
+
+</script>
+
+
+    <style >
+    .loader {
+    position: fixed;
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    background: url('../../assets/img/load.png') 50% 50% no-repeat rgb(249,249,249);
+     }
+    </style>
+   
+
+
+
+
+
+
+
+
+        public ActionResult Participate(int eventId, int profileid)
+        {
+
+            EventViewModel evm = new EventViewModel();
+            if (db.EventParticipations.Where(u => u.eventId == eventId && u.profileId == profileid) 
+                          .Count() > 0)
+            {
+
+                ViewBag.Message = "You are Already Participated For this Event";
+
+                return View("ListEvent",evm);
+
+            }
+
+
+
+
+            EventParticipation tbl = new EventParticipation();
+            tbl.eventId = eventId;
+            tbl.profileId = profileid;
+            db.EventParticipations.Add(tbl);
+
+            db.SaveChanges();
+
+            return RedirectToAction("ListEvent","Event");
+
+        }
+
+
+
+
+
+        public ActionResult ParticipatedEvent(int id)
+        {
+            var x = db.EventParticipations.Where(u => u.profileId == id).ToList();
+            EventViewModel evm = new EventViewModel();
+            List<EventModel> obj = new List<EventModel>();
+            foreach (var b in x)
+            {
+                var y = db.EventMasters.Where(u => u.eventId == b.eventId).FirstOrDefault();
+
+
+                EventModel m = new EventModel();
+
+                m.eventId = y.eventId;
+                m.name = y.name;
+                m.startDate = y.startDate;
+                m.eventType = y.eventType;
+                m.contactPerson = y.contactPerson;
+                obj.Add(m);
+
+
+            }
+            evm.evelist = obj;
+            return View(evm);
+        }
+
+    }

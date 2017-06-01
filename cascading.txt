@@ -1,0 +1,269 @@
+
+                                        <div class="form-group">
+                                            <label>Country <small style="color:red">*</small></label>
+                                            @Html.DropDownListFor(m => m.am.countryId, Model.Countries, "Select Country", new { @class = "form-control", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.am.countryId, "", new { @class = "text-danger" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>State <small style="color:red">*</small></label>
+                                            @Html.DropDownListFor(m => m.am.stateId, Model.States, "Select State", new { @class = "form-control", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.am.stateId, "", new { @class = "text-danger" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>City <small style="color:red">*</small></label>
+                                            @Html.DropDownListFor(m => m.am.cityId, Model.Cities, "Select City", new { @class = "form-control", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.am.cityId, "", new { @class = "text-danger" })
+                                        </div>
+
+
+
+
+
+
+
+
+
+
+2.
+
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+
+
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+
+<script type="text/javascript">
+                $(function () {
+                    $("select").each(function () {
+                        if ($(this).find("option").length <= 1) {
+                            $(this).attr("disabled", "disabled");
+                        }
+                    });
+
+                    $("select").change(function () {
+                        var value = 0;
+                        if ($(this).val() != "") {
+                            value = $(this).val();
+                        }
+                        var id = $(this).attr("id");
+                        $.ajax({
+                            type: "POST",
+                            url: "@Url.Action("AjaxMethod", "Ngo")",
+                            data: '{type: "' + id + '", value: ' + value + '}',
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (response) {
+                                var dropDownId;
+                                var list;
+                                switch (id) {
+                                    case "am_countryId":
+                                        list = response.States;
+                                        DisableDropDown("#am_stateId");
+                                        DisableDropDown("#am_cityId");
+                                        PopulateDropDown("#am_stateId", list);
+                                        break;
+                                    case "am_stateId":
+                                        dropDownId = "#am_cityId";
+                                        list = response.Cities;
+                                        DisableDropDown("#am_cityId");
+                                        PopulateDropDown("#am_cityId", list);
+                                        break;
+
+                                }
+                                if (id == "am_countryId" && value == 0) {
+                                    list = response.Countries;
+                                    DisableDropDown("#am_countryId");
+                                    PopulateDropDown("#am_countryId", list);
+
+                                }
+
+                            },
+                            failure: function (response) {
+
+                                alert("failure");
+                            },
+                            error: function (response) {
+
+                                alert("error")
+                            }
+                        });
+                    });
+                });
+
+                function DisableDropDown(dropDownId) {
+                    $(dropDownId).attr("disabled", "disabled");
+                    $(dropDownId).empty().append('<option selected="selected" value="0">Please select</option>');
+                }
+
+                function PopulateDropDown(dropDownId, list) {
+                    if (list != null && list.length > 0) {
+                        $(dropDownId).removeAttr("disabled");
+                        $.each(list, function () {
+                            $(dropDownId).append($("<option></option>").val(this['Value']).html(this['Text']));
+                        });
+                    }
+                }
+
+
+
+                $(".email").attr("data-validation", "email");
+
+</script>
+
+
+
+3.controller
+
+
+
+        [HandleError]
+        public JsonResult AjaxMethod(string type, int value)
+        {
+            NgoViewModel model = new NgoViewModel();
+
+            model.Countries = PopulateCountryDropDown("CountryName", "CountryId");
+         //   model.States = PopulateStateDropDown(value);
+            model.Cities = PopulateCityDropDown(value);
+            model.States = PopulateStatedd();
+
+        
+           
+
+            return Json(model);
+        }
+
+        public List<SelectListItem> PopulateCountryDropDown(string textColumn, string valueColumn)
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+            
+            var list = db.CountryMasters.ToList();
+            foreach (var x in list)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = x.countryName,
+                    Value = x.countryId.ToString()
+                });
+            }
+            return items;
+        }
+
+        public List<SelectListItem> PopulateStateDropDown(int? Sid)
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+            int a = Convert.ToInt32(Sid);
+            var lst = db.StateMasters.Where(u => u.countryId == a).ToList();
+
+            foreach (var x in lst)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = x.stateName,
+                    Value = x.stateId.ToString()
+                });
+            }
+            return items;
+        }
+
+
+
+        public List<SelectListItem> PopulateCityDropDown(int? ccid)
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+            int a = Convert.ToInt32(ccid);
+            var lst = db.CityMasters.Where(u => u.stateId == a).ToList();
+
+            foreach (var x in lst)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = x.cityName,
+                    Value = x.cityId.ToString()
+                });
+            }
+            return items;
+        }
+
+
+
+        public List<SelectListItem> GetCountry(int? cid)
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+
+            var list = db.CountryMasters.Where(u=>u.countryId==cid).ToList();
+            foreach (var x in list)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = x.countryName,
+                    Value = x.countryId.ToString()
+                });
+            }
+            return items;
+        }
+
+
+        public List<SelectListItem> GetState(int? Sid)
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+            
+            var lst = db.StateMasters.Where(u => u.stateId==Sid).ToList();
+
+            foreach (var x in lst)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = x.stateName,
+                    Value = x.stateId.ToString()
+                });
+            }
+            return items;
+        }
+
+        public List<SelectListItem> GetCity(int? ccid)
+        {
+            List<SelectListItem> items = new List<SelectListItem>();
+            
+            var lst = db.CityMasters.Where(u => u.cityId == ccid).ToList();
+
+            foreach (var x in lst)
+            {
+                items.Add(new SelectListItem
+                {
+                    Text = x.cityName,
+                    Value = x.cityId.ToString()
+                });
+            }
+            return items;
+        }
+
+
+4.edit method per:
+
+                    nvm.Countries = GetCountry(tbl1.countryId);
+                    nvm.States = GetState(tbl1.stateId);
+                    nvm.Cities = GetCity(tbl1.cityId);
+
+5.viewmodel
+
+
+        public List<ContactModal> listcotact { get; set; }
+        public List<RegisModel> listRegis { get; set; }
+        public List<StaffModel> liststaff { get; set; }
+  public NgoViewModel()
+        {
+           
+            this.Countries = new List<SelectListItem>();
+            this.States = new List<SelectListItem>();
+            this.Cities = new List<SelectListItem>();
+
+
+}
+
+
+
+

@@ -1,0 +1,300 @@
+﻿@model NgoCommunity.ViewModels.Ngo.NgoViewModel
+
+
+<div class="content">
+    <div class="container-fluid">
+
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header" data-background-color="purple">
+                        <h4 class="title">Ngo Registration</h4>
+                       
+                    </div>
+
+                    <div class="card-content">
+
+
+                       @using (Html.BeginForm("Update", "Ngo", FormMethod.Post, new { @id = "mediaAdd", @role = "form", @enctype = "multipart/form-data" }))
+                       {
+                            @Html.HiddenFor(m => m.nm.ngoId)
+                            @Html.HiddenFor(m => m.am.addressId)
+
+
+
+
+                            <div class="tab-content">
+
+                                <div class="row">
+
+
+                                    <div class="col-sm-8 col-sm-offset-1">
+
+                                        <div class="form-group">
+                                            <label>NGO Name <small style="color:red">*</small></label>
+                                            @Html.TextBoxFor(m => m.nm.name, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.nm.name, "", new { @class = "text-danger" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>PAN No <small style="color:red">*</small><small>(eg:-SDFGT1234H)</small></label>
+                                            @Html.TextBoxFor(m => m.nm.panNo, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.nm.panNo, "", new { @class = "text-danger" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Upload Pan <small style="color:red">*</small></label>
+                                        </div>
+
+
+                                        @*<div class="form-group form-file-upload is-fileinput">
+                                            @Html.TextBoxFor(m => m.nm.uploadPan, new { @class = "form-control ", @type = "file" })
+                                            @Html.ValidationMessageFor(m => m.nm.uploadPan, "", new { @class = "text-danger" })
+
+
+                                            <div class="input-group">
+                                                <input type="text" readonly="" class="form-control" placeholder="Single File">
+                                                <span class="input-group-btn input-group-s">
+                                                    <button type="button" class="btn btn-just-icon btn-round btn-primary">
+                                                        <i class="material-icons">attach_file</i>
+                                                    </button>
+                                                </span>
+                                            </div>
+                                            <span class="material-input"></span>
+                                        </div>*@
+
+
+                                        @if (Model.nm.uploadPan != null)
+                                        {
+                                            
+                                                var base64 = Convert.ToBase64String(Model.nm.uploadPan);
+                                                var imgSrc = String.Format("data:image/gif;base64,{0}", base64);
+
+                                                if (imgSrc != null)
+                                                {
+                                                    <img src='@imgSrc' style="max-width:70px; max-height:70px;" onerror="Text" />
+                                                }
+
+                                            }
+
+
+
+
+                                        @Html.TextBoxFor(m => m.File, new { @class = "col-md-6", @type = "file" })
+
+
+                                        <br />
+
+                                       
+                                       
+
+                                        <div class="form-group">
+                                            <label>Parent Organization <small></small></label>
+                                            @Html.TextBoxFor(m => m.nm.parentOrg, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.nm.parentOrg, "", new { @class = "text-danger" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Acheivement <small style="color:red">*</small></label>
+                                            @Html.TextAreaFor(m => m.nm.acheivement, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.nm.acheivement, "", new { @class = "text-danger" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Website <small style="color:red">*</small><small>(eg:-https://www.example.com)</small></label>
+                                            @Html.TextBoxFor(m => m.nm.websiteUrl, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.nm.websiteUrl, "", new { @class = "text-danger" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Address Type <small style="color:red">*</small></label>
+                                            @Html.TextBoxFor(m => m.am.addressType, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.am.addressType, "", new { @class = "text-danger" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Address Line 1 <small style="color:red">*</small></label>
+                                            @Html.TextBoxFor(m => m.am.addressLine1, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.am.addressLine1, "", new { @class = "text-danger" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Address Line 2 <small></small></label>
+                                            @Html.TextBoxFor(m => m.am.addressLine2, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.am.addressLine2, "", new { @class = "text-danger" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Address Line 3 <small></small></label>
+                                            @Html.TextBoxFor(m => m.am.addressLine3, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.am.addressLine3, "", new { @class = "text-danger" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Pincode <small style="color:red">*</small></label>
+                                            @Html.TextBoxFor(m => m.am.pincode, new { @class = "form-control" })
+                                            @Html.ValidationMessageFor(m => m.am.pincode, "", new { @class = "text-danger" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>Country <small style="color:red">*</small></label>
+                                            @Html.DropDownListFor(m => m.am.countryId, Model.Countries, "Select Country", new { @class = "form-control", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.am.countryId, "", new { @class = "text-danger" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>State <small style="color:red">*</small></label>
+                                            @Html.DropDownListFor(m => m.am.stateId, Model.States, "Select State", new { @class = "form-control", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.am.stateId, "", new { @class = "text-danger" })
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label>City <small style="color:red">*</small></label>
+                                            @Html.DropDownListFor(m => m.am.cityId, Model.Cities, "Select City", new { @class = "form-control", required = "required" })
+                                            @Html.ValidationMessageFor(m => m.am.cityId, "", new { @class = "text-danger" })
+                                        </div>
+
+
+                                        <div>
+
+                                            @Html.HiddenFor(m => m.nm.createdBy)
+                                            @Html.HiddenFor(m => m.nm.createdOn)
+                                        </div>
+
+                                        @*FCRA*@
+
+
+
+
+                                        <br />
+
+
+                                        <input type="submit" value="Save" class="btn btn-success" />
+                                        <a href="@Url.Action("UserNgoDetails","Ngo",new { })" class="btn btn-danger">Cancel</a>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+
+                        }
+
+
+
+
+                    </div>
+
+
+                </div>
+
+                
+
+            </div>
+
+
+        </div>
+    </div>
+
+</div>
+
+
+
+<br />
+<br />
+<br />
+<br />
+
+
+
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+
+
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+
+
+<script type="text/javascript">
+
+
+
+
+
+                $(function () {
+                    $("select").each(function () {
+                        if ($(this).find("option").length <= 1) {
+                            $(this).attr("disabled", "disabled");
+                        }
+                    });
+
+                    $("select").change(function () {
+                        var value = 0;
+                        if ($(this).val() != "") {
+                            value = $(this).val();
+                        }
+                        var id = $(this).attr("id");
+                        $.ajax({
+                            type: "POST",
+                            url: "@Url.Action("AjaxMethod", "Ngo")",
+                            data: '{type: "' + id + '", value: ' + value + '}',
+                            contentType: "application/json; charset=utf-8",
+                            dataType: "json",
+                            success: function (response) {
+                                var dropDownId;
+                                var list;
+                                switch (id) {
+                                    case "am_countryId":
+                                        list = response.States;
+                                        DisableDropDown("#am_stateId");
+                                        DisableDropDown("#am_cityId");
+                                        PopulateDropDown("#am_stateId", list);
+                                        break;
+                                    case "am_stateId":
+                                        dropDownId = "#am_cityId";
+                                        list = response.Cities;
+                                        DisableDropDown("#am_cityId");
+                                        PopulateDropDown("#am_cityId", list);
+                                        break;
+
+                                }
+                                if (id == "am_countryId" && value == 0) {
+                                    list = response.Countries;
+                                    DisableDropDown("#am_countryId");
+                                    PopulateDropDown("#am_countryId", list);
+
+                                }
+
+                            },
+                            failure: function (response) {
+
+                                alert("failure");
+                            },
+                            error: function (response) {
+
+                                alert("error")
+                            }
+                        });
+                    });
+                });
+
+                function DisableDropDown(dropDownId) {
+                    $(dropDownId).attr("disabled", "disabled");
+                    $(dropDownId).empty().append('<option selected="selected" value="0">Please select</option>');
+                }
+
+                function PopulateDropDown(dropDownId, list) {
+                    if (list != null && list.length > 0) {
+                        $(dropDownId).removeAttr("disabled");
+                        $.each(list, function () {
+                            $(dropDownId).append($("<option></option>").val(this['Value']).html(this['Text']));
+                        });
+                    }
+                }
+
+
+
+                $(".email").attr("data-validation", "email");
+
+</script>
