@@ -1,0 +1,21 @@
+﻿@model NgoCommunity.ViewModels.Ngo.NgoViewModel
+
+@{
+    //Layout = null;
+    Layout = "~/Views/Dashboard/Dashboard.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>UserNgoRegistration</title>
+</head>
+<body>
+    <div id="lstProd">
+            @Html.Partial("_PartialNgoRegistration", Model)
+        </div>
+</body>
+</html>
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>

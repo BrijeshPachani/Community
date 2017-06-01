@@ -1,0 +1,282 @@
+﻿@model NgoCommunity.ViewModels.Ngo.NgoViewModel
+
+
+@{
+    ViewBag.Title = "ReportNgo";
+    Layout = "~/Views/Dashboard/Dashboard.cshtml";
+}
+
+
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header" data-background-color="purple">
+                        <h4 class="title">Report</h4>
+                        @*<p class="category">Ngo profile</p>*@
+                    </div>
+
+                    <div class="card-content">
+
+
+    @using (Ajax.BeginForm("FilterNgo", "Ngo", new AjaxOptions { }))
+    {
+        @Html.HiddenFor(m => m.nm.ngoId)
+        @Html.HiddenFor(m => m.am.addressId)
+
+
+        <div class="tab-content">
+
+            <div class="row">
+
+
+                <div class="col-sm-6 col-sm-offset-1">
+
+
+                    <div class="form-group">
+                        <label>State <small style="color:red">*</small></label>
+                        @Html.DropDownListFor(m => m.am.stateId, Model.States, "Select State", new { @class = "form-control", required = "required" })
+
+                    </div>
+
+                    <div class="form-group">
+                        <label>City <small style="color:red">*</small></label>
+                        @Html.DropDownListFor(m => m.am.cityId, Model.Cities, "Select City", new { @class = "form-control", required = "required" })
+
+                    </div>
+
+                    <input type="submit" value="Search" class="btn btn-success" />
+
+                </div>
+
+            </div>
+
+
+        </div>
+
+    }
+
+                        <br />
+
+    @using (Ajax.BeginForm("SearchNgo", "Ngo", new AjaxOptions { }))
+    {
+        <div class="tab-content">
+
+            <div class="row">
+
+
+                <div class="col-sm-6 col-sm-offset-1">
+
+
+                    <div class="form-group">
+                        <label>NGO Name <small style="color:red">*</small></label>
+                        @Html.TextBoxFor(m => m.nm.name, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.nm.name, "", new { @class = "text-danger" })
+                        <input type="submit" value="Search By Name" class="btn btn-success" />
+
+                    
+                     </div>
+
+
+                 
+
+                    </div>
+
+
+                </div>
+            </div>
+                    }
+
+
+                </div>
+
+
+
+
+
+
+                <div class="card-content" id="print">
+
+                    <div class="card-content table-responsive">
+                        <table class="table">
+                            <thead class="text-primary">
+                                <tr>
+
+                                    <th>Ngo</th>
+                                    <th>Email Id</th>
+                                    <th>PAN NO</th>
+                                    <th>Website</th>
+                                    
+                                </tr>
+
+
+                            </thead>
+
+
+                            <tbody>
+
+                                @foreach (var item in Model.listnm)
+            {
+                                    <tr>
+
+                                        @Html.HiddenFor(modelItem => item.ngoId)
+
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.emailId)
+                                        </td>
+
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.panNo)
+                                        </td>
+
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.websiteUrl)
+                                        </td>
+                                       
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+
+
+
+
+            </div>
+
+
+                <a href="" data-toggle="tooltip" title="Print" onclick="PrintDivContent('print');">
+
+                    <img src="~/assets/img/printer.png" style="width:40px; height:40px;" />
+                </a>
+
+                &nbsp; &nbsp;
+
+                <a href="" id="btnExport" data-toggle="tooltip" title="Excel" >
+
+                    <img src="~/assets/img/excel.png" style="width:40px; height:40px;" />
+                </a>
+        </div>
+                </div>
+
+
+
+    </div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+<script src="~/Scripts/table2excel.js"></script>
+
+
+
+
+<script type="text/javascript">
+                                $(function () {
+                                    $("select").each(function () {
+                                        if ($(this).find("option").length <= 1) {
+                                            $(this).attr("disabled", "disabled");
+                                        }
+                                    });
+
+                                    $("select").change(function () {
+                                        var value = 0;
+                                        if ($(this).val() != "") {
+                                            value = $(this).val();
+                                        }
+                                        var id = $(this).attr("id");
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "@Url.Action("AjaxMethod", "Ngo")",
+                                            data: '{type: "' + id + '", value: ' + value + '}',
+                                            contentType: "application/json; charset=utf-8",
+                                            dataType: "json",
+                                            success: function (response) {
+                                                var dropDownId;
+                                                var list;
+                                                switch (id) {
+
+                                                    case "am_stateId":
+                                                        dropDownId = "#am_cityId";
+                                                        list = response.Cities;
+                                                        DisableDropDown("#am_cityId");
+                                                        PopulateDropDown("#am_cityId", list);
+                                                        break;
+
+                                                }
+
+
+                                            },
+                                            failure: function (response) {
+
+                                                alert("failure");
+                                            },
+                                            error: function (response) {
+
+                                                alert("error")
+                                            }
+                                        });
+                                    });
+                                });
+
+                                function DisableDropDown(dropDownId) {
+                                    $(dropDownId).attr("disabled", "disabled");
+                                    $(dropDownId).empty().append('<option selected="selected" value="0">Please select</option>');
+                                }
+
+                                function PopulateDropDown(dropDownId, list) {
+                                    if (list != null && list.length > 0) {
+                                        $(dropDownId).removeAttr("disabled");
+                                        $.each(list, function () {
+                                            $(dropDownId).append($("<option></option>").val(this['Value']).html(this['Text']));
+                                        });
+                                    }
+                                }
+
+
+
+        function PrintDivContent(divId) {
+            var printContent = document.getElementById(divId);
+            var WinPrint = window.open('', '', 'left=0,top=0,toolbar=0,sta­tus=0');
+            WinPrint.document.write(printContent.innerHTML);
+            WinPrint.document.close();
+            WinPrint.focus();
+            WinPrint.print();
+        }
+
+
+   
+
+
+        $("#btnExport").click(function () {
+
+            $("#print").table2excel({
+
+                exclude: ".noExl",
+
+            name: "Worksheet Name",
+
+            filename: "SomeFile"
+
+        });
+
+        });
+
+</script>

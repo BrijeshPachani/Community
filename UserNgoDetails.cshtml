@@ -1,0 +1,98 @@
+﻿@model NgoCommunity.ViewModels.Ngo.NgoViewModel
+
+
+@{
+    ViewBag.Title = "UserNgoDetails";
+    Layout = "~/Views/Dashboard/Dashboard.cshtml";
+}
+
+
+<div class="content">
+
+
+    <div class="container-fluid">
+
+       
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header" data-background-color="purple">
+                        <h4 class="title">Profile</h4>
+
+                    </div>
+                    <div class="card-content table-responsive">
+                        <table class="table">
+                            <thead class="text-primary">
+                                <tr>
+                                    @*<th>ID</th>*@
+                                    <th>Ngo</th>
+                                    <th>Email Id</th>
+                                    <th>PAN NO</th>
+                                    <th>Website</th>
+
+                                    <th>Action</th>
+
+                                </tr>
+
+
+                            </thead>
+
+
+                            <tbody>
+
+                                @foreach (var item in Model.listnm)
+                                {
+                                    <tr>
+
+                                        @Html.HiddenFor(modelItem => item.ngoId)
+
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.name)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.emailId)
+                                        </td>
+
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.panNo)
+                                        </td>
+
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.websiteUrl)
+                                        </td>
+
+
+
+
+
+                                        <td>
+
+
+
+                                            <a href="@Url.Action("GetId", "Ngo", new { id = @item.ngoId })" data-toggle="tooltip" title="Edit"> 
+                                            
+                                                <img src="~/assets/img/pencil.png" style="width:20px; height:20px;" /> 
+                                            
+                                            </a>  &nbsp;
+
+
+                                            &nbsp;
+
+                                            <a href="@Url.Action("GetDetailsId", "Ngo", new { id = @item.ngoId })">
+                                                <img src="~/assets/img/binoculars.png" style="width:20px; height:20px;" />  
+                                                 
+                                            </a>
+
+
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Scripts/jquery-1.12.4.min.js"></script>
