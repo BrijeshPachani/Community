@@ -1,0 +1,77 @@
+﻿@model NgoCommunity.ViewModels.Ngo.NgoViewModel
+
+@{
+    ViewBag.Title = "NgoList";
+    Layout = "~/Views/Dashboard/Dashboard.cshtml";
+}
+
+
+
+<div class="content">
+
+
+    <div class="container-fluid">
+
+        <a href="@Url.Action("NgoRegistration","Ngo")" class="btn btn-fab btn-primary">
+            <i class="material-icons">add</i>
+        </a>
+
+        &nbsp;
+        &nbsp;
+        &nbsp;
+        &nbsp;
+
+        <a href="@Url.Action("NgoPendingList","Ngo")" class="btn btn-success">
+            Pending Ngo
+        </a>
+      
+        &nbsp;
+        &nbsp;
+        &nbsp;
+        &nbsp;
+
+        <a href="@Url.Action("NgoApprovedList","Ngo")" class="btn btn-success">
+            Approved Ngo
+        </a>
+        <br />
+        <br />
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card">
+                    <div class="card-header" data-background-color="purple" >
+                        <h4 class="title">All Ngo List</h4>
+                      
+                    </div>
+             
+                    <div id="lst">
+
+                        @Html.Partial("_PartialNgoList", Model)
+
+                    </div>
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="~/Scripts/jquery-1.12.4.min.js"></script>
+
+
+
+<script src="~/Scripts/jquery-confirm.min.js"></script>
+
+<link href="~/Content/jquery-confirm.min.css" rel="stylesheet" />
+
+
+
+<script>
+ $(".confirm").confirm({
+
+        title: 'Are You Sure?',
+        content: 'You Want To Delete this Ngo?'
+    });
+
+</script>
+
+
