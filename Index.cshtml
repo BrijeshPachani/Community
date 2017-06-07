@@ -1,0 +1,325 @@
+﻿@model PMSApplication.ViewModels.ProjectViewModel
+
+
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+
+<script src="~/Scripts/jquery-ui.min.js"></script>
+
+
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+
+@*<link href="~/Content/jquery-ui.theme.min.css" rel="stylesheet" />*@
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
+<script>
+    $(function () {
+        // $(".datepick").datepicker({ dateFormat: "dd-mm-yy" });
+
+
+        $(".txtFrom").datepicker({
+
+            dateFormat: 'dd/mm/yy',
+            onSelect: function () {
+                var minDate = $('.txtFrom').datepicker('getDate');
+                $(".txtTo").datepicker("change", { minDate: minDate });
+            }
+        });
+
+        $(".txtTo").datepicker({
+
+            dateFormat: 'dd/mm/yy',
+            onSelect: function () {
+                var maxDate = $('.txtTo').datepicker('getDate');
+                $(".txtFrom").datepicker("change", { maxDate: maxDate });
+            }
+        });
+
+    });
+</script>
+
+
+<h2></h2>
+
+
+
+<div class="container">
+    <div class="row">
+
+        <div class="col-sm-3">
+
+        </div>
+        <div class="col-sm-6">
+
+
+            <div class="card wizard-card ct-wizard-orange" id="wizard">
+
+
+                @using (Ajax.BeginForm("Update", "Project", new AjaxOptions { }))
+                {
+                    @Html.HiddenFor(m => m.pm.ProjectId)
+
+                    <div class="wizard-header">
+                        <h3>
+                            <b>APPLICATION </b> FORM
+                           
+                        </h3>
+                    </div>
+                    <ul class="nav nav-pills">
+                        <li class="active" style="width: 100%;"><a href="#about" data-toggle="tab" aria-expanded="true"></a></li>
+
+                    </ul>
+                    <div class="tab-content">
+
+                        <div class="row">
+
+
+                            <div class="col-sm-8 col-sm-offset-1">
+
+                               <div class="form-group">
+                                   <label>Project Name <small>(required)</small></label>
+                                   @Html.TextBoxFor(m => m.pm.Name, new { @class = "form-control", required = "required" })
+                              </div>
+                                <div class="form-group">
+                                    <label> Start Date <small>(required)</small></label>
+                                    @Html.TextBoxFor(m => m.pm.StartDate, "{0:dd/MM/yyyy}", new { @class = "txtFrom form-control", required = "required" })
+                                </div>
+                                <div class="form-group">
+                                    <label> End Date <small>(required)</small></label>
+                                    @Html.TextBoxFor(m => m.pm.EndDate, "{0:dd/MM/yyyy}", new { @class = "txtTo form-control", required = "required" })
+                                </div>
+                                <div class="form-group">
+                                    <label>Estimated Hours <small>(required)</small></label>
+                                    @Html.TextBoxFor(m => m.pm.EstimatedHours, new { @class= "form-control", @type = "number", required = "required" })
+                                </div>
+                                <div class="form-group">
+                                    <label>Skills <small>(required)</small></label>
+
+                                    @foreach (var x in Model.smlist)
+                                    {
+                                        <input type="checkbox" id="selectcheck" name="chk" value="@x.SName" /> @x.SName
+                                    }
+
+                                    @Html.TextAreaFor(m => m.pm.Skills, new { @id = "divResult", style = "display: none;" })
+                                </div>
+                                <div class="form-group">
+                                    <label>Summary</label>
+                                   @Html.TextAreaFor(m => m.pm.Summary,new {@class= "form-control", maxlength="100" })
+                                </div>
+                    <br />
+                                <input type="submit" id="btnSubmit" value="Submit" class="btn btn-warning" />
+                              
+                                <br />
+                            </div>
+
+
+                        </div>
+
+                    </div>
+                }
+                </div>
+            @*<input type="button" id="btn" />*@
+
+            </div>
+    </div>
+    <a href="@Url.Action("Index","Project",new { })" class="btn btn-danger">Reset</a>
+
+</div> <!--  big container -->
+
+
+
+              
+
+
+    <table class="table card wizard-card ct-wizard-orange">
+        <tr>
+            <td>
+                Project Id
+            </td>
+            <td>
+                Project Name
+            </td>
+            <td>
+                StartDate
+            </td>
+            <td>
+                EndDate
+            </td>
+            <td>
+                EstimatedHours
+            </td>
+            <td>
+                Skills
+            </td>
+
+            <td>
+                Edit
+            </td>
+            <td>
+                Delete
+            </td>
+        </tr>
+
+        <br />
+
+        @foreach (var x in Model.pmlist)
+        {
+
+
+            <tr>
+                <td>
+                    @x.ProjectId
+                </td>
+                <td>
+                    @x.Name
+                </td>
+                <td>
+                    @x.StartDate.Value.ToShortDateString()
+                </td>
+                <td>
+                    @x.EndDate.Value.ToShortDateString()
+                </td>
+                <td>
+                    @x.EstimatedHours
+                </td>
+                <td>
+                    @x.Skills
+                </td>
+
+                <td>
+                    <a href="@Url.Action("GetId","Project",new {id =@x.ProjectId })">Edit</a>
+                </td>
+                <td>
+                    <a href="@Url.Action("Delete","Project",new {id = @x.ProjectId })">Delete</a>
+                </td>
+            </tr>
+
+
+
+        }
+
+
+
+
+    </table>
+
+
+    <input type="button" value="Fetch Skill Data" id="btnAllSkills" class="btn btn-danger" />
+
+<br />
+<br />
+<br />
+
+    <div id="UpdatePanel" style="width:20%"> </div>
+
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+
+            $("#btnAllSkills").click(function () {
+                $.ajax({
+                    url: '@Url.Action("GetData","Project")',
+                    data: "",
+                    type: "POST",
+                    dataType: "json",
+                    success: function (data) {
+                        SearchData(data);
+
+                    },
+                    error: function () {
+                        alert("Failed please try again !");
+                    }
+                });
+            });
+
+
+
+            function SearchData(data) {
+                var tab = $('<table class="table"></table>');
+                var thead = $('<thead></thead>');
+                thead.append('<th>Skill ID</th>');
+                thead.append('<th>Skill Name</th>');
+
+
+                tab.append(thead);
+                $.each(data, function (i, val) {
+                    var trow = $('<tr></tr>');
+                    trow.append('<td>' + val.SkillId + '</td>');
+                    trow.append('<td>' + val.SName + '</td>');
+
+                    tab.append(trow);
+                });
+
+                $("#UpdatePanel").html(tab);
+            };
+
+        });
+
+
+
+        //$(function () {
+        //    $('#btn').click(function () {
+        //        if ($('input:checkbox[name=chk]:checked').length == 0) {
+        //            alert("You must check at least one checkbox. ");
+        //        }
+
+
+        //    })
+        //});
+
+
+
+
+        $(function () {
+            $('#btnSubmit').click(function () {
+                var slvals = []
+                $('input:checkbox[name=chk]:checked').each(function () {
+                    slvals.push($(this).val() + ",")
+
+                })
+
+                $('#divResult').html(slvals);
+        
+                if ($('input:checkbox[name=chk]:checked').length == 0) {
+                    alert("You must check at least one checkbox. ");
+                    return false;
+                }
+            })
+        });
+
+
+        $(function () {
+            //$('#btn').click(function () {
+            var sl = $('#divResult').val();
+
+            var arr = new Array();
+            arr = sl.split(',');
+
+
+            for (var x = 0; x < arr.length; x++) {
+                //alert('Name:- ' + arr[x]);
+
+
+                $(":checkbox[value='" + arr[x] + "']").prop('checked', true);
+
+            }
+
+            //})
+        });
+
+
+
+
+    </script>
+
+
+    <link href="~/Content/gsdk-base.css" rel="stylesheet" />

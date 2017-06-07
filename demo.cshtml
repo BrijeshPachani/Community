@@ -1,0 +1,357 @@
+﻿@model PMSApplication.ViewModels.ProjectViewModel
+
+@{
+    ViewBag.Title = "View";
+}
+
+
+<script src="~/Scripts/jquery-1.10.2.min.js"></script>
+
+<script src="~/Scripts/jquery.validate.min.js"></script>
+
+<script src="~/Scripts/jquery-ui.min.js"></script>
+
+
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+
+@*<link href="~/Content/jquery-ui.theme.min.css" rel="stylesheet" />*@
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/jquery-form-validator/2.3.26/jquery.form-validator.min.js"></script>
+<script>
+    $(function () {
+       
+
+        //$(".txtFrom").datepicker({
+
+           
+        //    dateFormat: 'dd/mm/yy',
+        //    onSelect: function (selected) {
+        //        var dt = new Date(selected);
+        //        dt.setDate(dt.getDate() + 1);
+        //        $(".txtTo").datepicker("option", "minDate", dt);
+              
+        //    }
+        
+            
+           
+       
+        //});
+
+        //$(".txtTo").datepicker({
+        //    dateFormat: 'dd/mm/yy',
+        //    onSelect: function (selected) {
+        //        var dt = new Date(selected);
+        //        dt.setDate(dt.getDate() - 1);
+        //        $(".txtFrom").datepicker("option", "maxDate", dt);
+               
+        //    }
+           
+        //    });
+
+      
+        $(".txtFrom").datepicker({
+           
+            dateFormat: 'dd/mm/yy',
+            onSelect: function () {
+                var minDate = $('.txtFrom').datepicker('getDate');
+                $(".txtTo").datepicker("change", { minDate: minDate });
+            }
+        });
+
+        $(".txtTo").datepicker({
+           
+            dateFormat: 'dd/mm/yy',
+            onSelect: function () {
+                var maxDate = $('.txtTo').datepicker('getDate');
+                $(".txtFrom").datepicker("change", { maxDate: maxDate });
+            }
+        });
+
+        //$(function () {
+        //    var dateFormat = "mm/dd/yy",
+        //      from = $(".txtFrom")
+        //        .datepicker({
+        //            defaultDate: "+1w",
+        //            changeMonth: true,
+                   
+        //        })
+        //        .on("change", function () {
+        //            to.datepicker("option", "minDate", getDate(this));
+        //        }),
+        //      to = $(".txtTo").datepicker({
+        //          defaultDate: "+1w",
+        //          changeMonth: true,
+                 
+        //      })
+        //      .on("change", function () {
+        //          from.datepicker("option", "maxDate", getDate(this));
+        //      });
+
+        //    function getDate(element) {
+        //        var date;
+        //        try {
+        //            date = $.datepicker.parseDate(dateFormat, element.value);
+        //        } catch (error) {
+        //            date = null;
+        //        }
+
+        //        return date;
+        //    }
+        //});
+
+    //$(function () {
+    //    var startDate;
+    //    $(".txtFrom").datepicker({
+          
+    //        dateFormat: 'dd-mm-yy',
+           
+    //        roundTime: 'ceil',
+    //        onChangeDateTime: function (dp, $input) {
+    //            startDate = $(".txtFrom").val();
+    //        }
+    //    });
+    //    $(".txtTo").datepicker({
+           
+    //        dateFormat: 'dd-mm-yy',
+    //        onClose: function (current_time, $input) {
+    //            var endDate = $(".txtTo").val();
+    //            if (startDate > endDate) {
+    //                alert('Please select correct date');
+    //            }
+    //        }
+    //    });
+
+    //});
+
+
+
+      });
+
+
+
+
+</script>
+
+
+
+        <!--   Big container   -->
+        <div class="container">
+            <div class="row">
+
+            <div class="col-sm-3">
+
+            </div>
+            <div class="col-sm-6">
+
+                <br />
+
+                        <div class="card wizard-card ct-wizard-orange" id="wizard">
+                         
+@using (Ajax.BeginForm("Update", "Project", new AjaxOptions { }))
+{
+    @Html.HiddenFor(m => m.pm.ProjectId)
+
+                                <div class="wizard-header">
+                                    <h3>
+                                        <b>REGISTRATION </b> FORM 
+                                       <br />
+                                    </h3>
+                                </div>
+                                <ul class="nav nav-pills">
+                                    <li class="active" style="width: 100%;"><a href="#about" data-toggle="tab" aria-expanded="true">INFORMATION</a></li>
+                                  
+                                </ul>
+                                <div class="tab-content">
+                                  
+                                        <div class="row">
+                                          
+
+                                            <div class="col-sm-8 col-sm-offset-1">
+                                                <div class="form-group">
+                                                    <label>Project Name <small>(required)</small></label>
+                                                    @Html.TextBoxFor(m => m.pm.Name, new { @class = "form-control", required = "required" })
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Middle Name </label>
+                                                    @Html.TextBoxFor(m => m.pm.StartDate, "{0:dd/MM/yyyy}", new { @class = "txtFrom form-control", required = "required" })
+                                                </div>
+                                              <div class="form-group">
+                                                    <label>Mobile No <small>(required)</small></label>
+                                                  @Html.TextBoxFor(m => m.pm.EndDate, "{0:dd/MM/yyyy}", new { @class = "txtTo form-control", required = "required" })
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Email Id <small>(required)</small></label>
+                                                    <input type="text" id="lname" name="lname" class="form-control"
+                                                           data-validation="email">
+                                                </div>
+                                               <div class="form-group">
+                                                    <label>Birth Date <small>(required)</small></label>
+                                                    <input type="date" max="1998-12-31" required id="dob" name="dob" class="form-control" data-validation="required">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>Gender <small>(required)</small></label>
+                                                    <input type="radio" id="male" name="gender">Male
+                                                    <input type="radio" id="female" name="gender">Female
+                                                    <label id="gender-error" class="error" for="gender"></label>
+                                                </div>
+
+                                            </div>
+
+
+                                        </div>
+                                    
+                                </div>
+                  <div class="wizard-footer">
+                                        <div class="pull-right">
+                                            <input type="submit" id="btn" class="btn btn-next btn-fill btn-warning btn-wd btn-sm" name="next" value="Next" >
+                                            <input type="submit" class="btn btn-finish btn-fill btn-warning btn-wd btn-sm" name="finish" value="Finish" style="display: none;">
+
+                                        </div>
+                                        <div class="pull-left">
+                                            <input type="button" class="btn btn-previous btn-fill btn-default btn-wd btn-sm disabled" name="previous" value="Previous">
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+}
+                        </div>
+
+                   
+                </div>
+
+
+
+
+            </div><!-- end row -->
+        </div> <!--  big container -->
+<br />
+
+
+
+<td>
+    @*@for (int i = 0; i < Model.smlist.Count; i++)
+          {
+            @Html.CheckBox(Model.smlist[i].SName,new { name = "chkcountry" })  @Model.smlist[i].SName
+        }*@
+
+
+    @*@for (int i = 0; i < Model.smlist.Count; i++)
+        {
+            @Html.CheckBoxFor(m => (bool)Model.smlist[i].Status)
+            @Model.smlist[i].SName
+            @Html.HiddenFor(m => Model.smlist[i].SkillId)
+            @Html.HiddenFor(m => Model.smlist[i].SName)
+        }*@
+
+</td>
+
+
+
+
+
+
+
+
+
+
+
+<div class="card wizard-card ct-wizard-orange " id="wizard">
+    <table class="table">
+
+        <tr>
+            <td>
+                Project Id
+            </td>
+            <td>
+                Project Name
+            </td>
+            <td>
+                StartDate
+            </td>
+            <td>
+                EndDate
+            </td>
+            <td>
+                EstimatedHours
+            </td>
+            <td>
+                Skills
+            </td>
+
+            <td>
+                Edit
+            </td>
+            <td>
+                Delete
+            </td>
+        </tr>
+
+
+
+
+
+
+        @foreach (var x in Model.pmlist)
+        {
+
+
+            <tr>
+                <td>
+                    @x.ProjectId
+                </td>
+                <td>
+                    @x.Name
+                </td>
+                <td>
+                    @x.StartDate.Value.ToShortDateString()
+                </td>
+                <td>
+                    @x.EndDate.Value.ToShortDateString()
+                </td>
+                <td>
+                    @x.EstimatedHours
+                </td>
+                <td>
+                    @x.Skills
+                </td>
+
+                <td>
+                    <a href="@Url.Action("GetId","Project",new {id =@x.ProjectId })">Edit</a>
+                </td>
+                <td>
+                    <a href="@Url.Action("Delete","Project",new {id = @x.ProjectId })">Delete</a>
+                </td>
+            </tr>
+
+
+
+        }
+
+
+
+
+    </table>
+
+
+    </div>
+
+
+    @*<script src="~/Scripts/jquery-1.10.2.min.js"></script>*@
+    <link href="~/Content/gsdk-base.css" rel="stylesheet" />
+
+
+<script type="text/javascript">
+
+
+    $(function () {
+        $('#btn').click(function () {
+            if ($('input:checkbox[name=chk]:checked').length > 0) {
+                alert("You must check at least one checkbox. ");
+            }
+
+
+        })
+    });
+
+  
+
+</script>
